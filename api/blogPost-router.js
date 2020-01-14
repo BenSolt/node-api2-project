@@ -5,7 +5,7 @@ const Posts = require('../data/db');
 const router = express.Router();
 
 
-
+//GET POSTS
 router.get('/api/posts', (req, res) => {
   Posts.find(req.query)
     .then(posts => {
@@ -20,7 +20,8 @@ router.get('/api/posts', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+//GET POST BY ID (GET)
+router.get('/api/posts/:id', (req, res) => {
     Posts.findById(req.params.id)
     .then(post => {
       if (post) {
@@ -38,7 +39,8 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+//ADD A POST (POST)
+router.post('/api/posts', (req, res) => {
     Posts.insert(req.body)
     .then(post => {
       res.status(201).json(post);
@@ -52,7 +54,8 @@ router.post('/', (req, res) => {
     });
 });
 
-router.put('/:id', (req, res) => {
+//EDIT A POST (PUT)
+router.put('/api/posts/:id', (req, res) => {
   const changes = req.body;
   Posts.update(req.params.id, changes)
     .then(post => {
@@ -71,8 +74,8 @@ router.put('/:id', (req, res) => {
     });
 });
 
-// FIND COMMENT BY ID
-router.delete('/:id', (req, res) => {
+// DELETE POST (DELETE)
+router.delete('/api/posts/:id', (req, res) => {
     Posts.remove(req.params.id)
     .then(count => {
       if (count > 0) {
@@ -90,59 +93,7 @@ router.delete('/:id', (req, res) => {
     });
 });
 
-// FIND COMMENTS
-router.get('/:id', (req, res) => {
-    Posts.findPostComments(req.params.id)
-    .then(post => {
-      if (post) {
-        res.status(200).json(post);
-      } else {
-        res.status(404).json({ message: 'blogpost not found' });
-      }
-    })
-    .catch(error => {
-      // log error to database
-      console.log(error);
-      res.status(500).json({
-        message: 'Error retrieving the blogpost',
-      });
-    });
-});
 
-
-// FIND COMMENT BY ID
-router.get('/:id', (req, res) => {
-    Posts.findCommentById(req.params.id)
-    .then(post => {
-      if (post) {
-        res.status(200).json(post);
-      } else {
-        res.status(404).json({ message: 'blogpost not found' });
-      }
-    })
-    .catch(error => {
-      // log error to database
-      console.log(error);
-      res.status(500).json({
-        message: 'Error retrieving the blogpost',
-      });
-    });
-});
-
-// INSERT COMMENT
-router.post('/', (req, res) => {
-    Posts.insertComment(req.body)
-    .then(post => {
-      res.status(201).json(post);
-    })
-    .catch(error => {
-      // log error to database
-      console.log(error);
-      res.status(500).json({
-        message: 'Error adding the blogpost',
-      });
-    });
-});
 
 module.exports = router;
 
