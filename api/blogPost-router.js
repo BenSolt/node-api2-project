@@ -27,14 +27,14 @@ router.get('/posts/:id', (req, res) => {
       if (post) {
         res.status(200).json(post);
       } else {
-        res.status(404).json({ message: 'blogpost not found' });
+        res.status(404).json({ message: "The post with the specified ID does not exist" });
       }
     })
     .catch(error => {
       // log error to database
       console.log(error);
       res.status(500).json({
-        message: 'Error retrieving the blogpost',
+        message: 'The post information could not be retrieved',
       });
     });
 });
@@ -61,19 +61,23 @@ router.post('/posts', (req, res) => {
 //EDIT A POST (PUT)
 router.put('/posts/:id', (req, res) => {
   const changes = req.body;
+  if (!postData.title || !postData.contents ){
+    res.status(400).json({
+    errorMessage: "Please provide title and contents for the post."})
+  }
   Posts.update(req.params.id, changes)
     .then(post => {
       if (post) {
         res.status(200).json(post);
       } else {
-        res.status(404).json({ message: 'The blogpost could not be found' });
+        res.status(404).json({ message: 'The post with the specified ID does not exist' });
       }
     })
     .catch(error => {
       // log error to database
       console.log(error);
       res.status(500).json({
-        message: 'Error updating the blogpost',
+        message: 'The post information could not be modified',
       });
     });
 });
@@ -85,14 +89,14 @@ router.delete('/posts/:id', (req, res) => {
       if (count > 0) {
         res.status(200).json({ message: 'The blogpost has been deleted' });
       } else {
-        res.status(404).json({ message: 'The blogpost could not be found' });
+        res.status(404).json({ message: 'The post with the specified ID does not exist' });
       }
     })
     .catch(error => {
       // log error to database
       console.log(error);
       res.status(500).json({
-        message: 'Error removing the blogpost',
+        message: 'The post could not be removed',
       });
     });
 });
