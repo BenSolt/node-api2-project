@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 //GET POSTS
-router.get('/api/posts', (req, res) => {
+router.get('/posts', (req, res) => {
   Posts.find(req.query)
     .then(posts => {
       res.status(200).json(posts);
@@ -21,7 +21,7 @@ router.get('/api/posts', (req, res) => {
 });
 
 //GET POST BY ID (GET)
-router.get('/api/posts/:id', (req, res) => {
+router.get('/posts/:id', (req, res) => {
     Posts.findById(req.params.id)
     .then(post => {
       if (post) {
@@ -40,7 +40,12 @@ router.get('/api/posts/:id', (req, res) => {
 });
 
 //ADD A POST (POST)
-router.post('/api/posts', (req, res) => {
+router.post('/posts', (req, res) => {
+  const postData = req.body;
+    if (!postData.title || !postData.contents ){
+      res.status(400).json({
+      errorMessage: "Please provide title and contents for the post."})
+    }
     Posts.insert(req.body)
     .then(post => {
       res.status(201).json(post);
@@ -49,13 +54,12 @@ router.post('/api/posts', (req, res) => {
       // log error to database
       console.log(error);
       res.status(500).json({
-        message: 'Error adding the blogpost',
-      });
+        error: "There was an error while saving the post to the database"});
     });
 });
 
 //EDIT A POST (PUT)
-router.put('/api/posts/:id', (req, res) => {
+router.put('/posts/:id', (req, res) => {
   const changes = req.body;
   Posts.update(req.params.id, changes)
     .then(post => {
@@ -75,11 +79,11 @@ router.put('/api/posts/:id', (req, res) => {
 });
 
 // DELETE POST (DELETE)
-router.delete('/api/posts/:id', (req, res) => {
+router.delete('/posts/:id', (req, res) => {
     Posts.remove(req.params.id)
     .then(count => {
       if (count > 0) {
-        res.status(200).json({ message: 'The blogpost has been nuked' });
+        res.status(200).json({ message: 'The blogpost has been deleted' });
       } else {
         res.status(404).json({ message: 'The blogpost could not be found' });
       }

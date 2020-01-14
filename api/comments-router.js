@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 // FIND COMMENTS  (GET)
-router.get('/api/posts/:id/comments', (req, res) => {
+router.get('/posts/:id/comments', (req, res) => {
     Posts.findPostComments(req.params.id)
     .then(post => {
       if (post) {
@@ -26,7 +26,7 @@ router.get('/api/posts/:id/comments', (req, res) => {
 
 
 // FIND COMMENT BY ID (GET)
-router.get('/api/posts/:id/comments', (req, res) => {
+router.get('/posts/:id/comments', (req, res) => {
     Posts.findCommentById(req.params.id)
     .then(post => {
       if (post) {
@@ -45,7 +45,16 @@ router.get('/api/posts/:id/comments', (req, res) => {
 });
 
 // INSERT COMMENT (ADD)
-router.post('/api/posts/:id/comments', (req, res) => {
+router.post('/posts/:id/comments', (req, res) => {
+  const postData = req.body;
+  if (!req.params.id){
+    res.status(400).json({
+    message: "The post with the specified ID does not exist."})
+  }
+  if (!postData.text){
+    res.status(400).json({
+    message: "Please provide text for the comment"})
+  }
     Posts.insertComment(req.body)
     .then(post => {
       res.status(201).json(post);
@@ -54,7 +63,7 @@ router.post('/api/posts/:id/comments', (req, res) => {
       // log error to database
       console.log(error);
       res.status(500).json({
-        message: 'Error adding the blogpost',
+        error: "There was an error while saving the comment to the database"
       });
     });
 });

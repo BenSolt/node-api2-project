@@ -1,7 +1,7 @@
 const express = require('express');
 
-const hubsRouter = require('../hubs/hubs-router.js');
-const usersRouter = require('../users/users-router.js');
+const blogRouter = require('../api/blogPost-router');
+const commentsRouter = require('../api/comments-router');
 
 const server = express();
 
@@ -14,7 +14,7 @@ server.get('/', (req, res) => {
 });
 
 // requests to routes that begin with /api/hubs
-server.use('/api/hubs', hubsRouter);
-server.use('/api/users', usersRouter);
+server.use('/api', blogRouter);
+server.use('/api', commentsRouter);
 
 module.exports = server;
