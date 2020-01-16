@@ -61,7 +61,7 @@ router.post('/posts', (req, res) => {
 //EDIT A POST (PUT)
 router.put('/posts/:id', (req, res) => {
   const changes = req.body;
-  if (!postData.title || !postData.contents ){
+  if (!changes.title || !changes.contents ){
     res.status(400).json({
     errorMessage: "Please provide title and contents for the post."})
   }

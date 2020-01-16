@@ -1,6 +1,12 @@
 const knex = require('knex');
-const knexConfig = require('../knexfile.js');
+
+/// added for herkoku deployment
+const environment = process.env.DB_ENV || 'development'
+//// added [environment] at end of 7.
+
+const knexConfig = require('../knexfile.js')[environment];
 const db = knex(knexConfig.development);
+
 
 module.exports = {
   find,
